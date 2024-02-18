@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Все слова
+{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+    <h1>Все слова в тексте</h1>
+    {% for el in words %}
+    <div class = "gridclass container2 rounded-pill">
+    <div class = "pidoras divinl">{{el[1]}}</div>
+    <div class="divinl">
+    <button class="btn btn-secondary rounded-pill px-3 stylebtn " type="button">Подробнее</button>
+    </div>
+</div>
+    {% endfor %}
+</div>
+{% endblock %}

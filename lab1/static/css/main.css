@@ -1,0 +1,43 @@
+.container2{
+    width: 80%;
+    height: 60px;
+    margin-left: 10%;
+    margin-top: 3%;
+    background-color: rgb(82, 0, 56);
+    border: 2px solid;
+    border-color: black;
+
+    /* text-indent: 2%; */
+    /* text-align: justify; */
+}
+
+.stylebtn{
+    position: relative;
+    margin-left: 70%;
+    margin-top: 1.5%;
+}
+
+.pidoras{
+    position: relative;
+    color: aliceblue;
+    /*height: 70px;*/
+    margin-top: 2.5%;
+    margin-left: 5%;
+    vertical-align: middle;
+    font-weight: bold;
+    font-size: large;
+
+}
+
+.divinl{
+    display: inline;
+}
+
+.gridclass{
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-auto-rows: 10%
+}
+body{
+    background-color: darkgray;
+}

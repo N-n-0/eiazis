@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block title %}
+{{value[0][0]}}
+{% endblock %}
+
+{% block body %}
+<div class="container" id="containers">
+
+    <h2 class="mt-4">{{value[0][0]}}</h2>
+    <p>Нормальная форма слова</p>
+    {% for index in range(val_size) %}
+        <h5 class="d-flex justify-content-between align-items-center mb-3">
+            <span class="text-primary">{{value[index][1]}}</span>
+            </h5>
+    <p>Употребление в тексте</p>
+        <ul class="list-group mb-3">
+          {% for el in range(size) if value[index][el+2]!='None' %}
+          <li class="list-group-item d-flex justify-content-between lh-sm">
+            <div>
+              <h6 class="my-0">{{morphem[el]}}</h6>
+              <small class="text-body-secondary">{{value[index][el+2]}}</small>
+            </div>
+          </li>
+            {% endfor %}
+        </ul>
+    {% endfor %}
+</div>
+
+
+
+{% endblock %}
