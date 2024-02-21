@@ -5,30 +5,65 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="stylesheet" href="{{url_for('static', filename= 'css/main.css') }}">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
      <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="{{url_for('static', filename= 'css/main.css') }}">
     <title>{% block title %}{% endblock %}</title>
 </head>
-<body class="xz">
+<body >
 <header class="p-3 text-bg-dark">
     <div class="container">
       <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
-        <a href="/" class="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none">
-          <svg class="bi me-2" width="40" height="32" role="img" aria-label="Bootstrap"><use xlink:href="#bootstrap"></use></svg>
-        </a>
 
         <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
-          <li><a href="/" class="nav-link px-2 text-secondary">Home</a></li>
-        </ul>
+          <li><a href="/" class="nav-link px-2 text-secondary">На главную</a></li>
+            <li>
 
-        <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3" role="search">
-          <input type="search" class="form-control form-control-dark text-bg-dark" placeholder="Search..." aria-label="Search">
+            </li>
+
+        </ul>
+        <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3" rel="search" action="../word" method="post">
+          <input type="search" class="form-control form-control-dark" autocomplete="on" autofocus list="words" placeholder="Поиск..." name="search">
+               <datalist id="words">
+                           {% for el in words %}
+    <option>{{el[1]}}</option>
+{% endfor %}
+   </datalist>
         </form>
+           <form action="../" method="post" enctype="multipart/form-data">
+             <form action="../" method="post" enctype="multipart/form-data">
+                 <input type="file" onclick="handleFileSelect()" accept="	application/rtf,application/x-rtf,text/richtext,text/plain" name="file" id="file-input" hidden>
+                     <label for="file-input" class="btn btn-warning"> Загрузить файл</label>
+
+                 </form>
+                <script>
+    function handleFileSelect(event) {
+        var file = event.target.files[0];
+        var formData = new FormData();
+        formData.append("file", file);
+        $.ajax({
+            url: "/",
+            type: "POST",
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function(data) {
+                $("#result").html(data);
+            },
+            error: function(error) {
+                $("#result").html("Error: " + error.statusText);
+            }
+        });
+    }
+    $("#file-input").on("change", handleFileSelect);
+                </script>
+
       </div>
     </div>
   </header>
 
-    {% block body %}{% endblock %}
+  {% block body %}{% endblock %}
 </body>
 </html>

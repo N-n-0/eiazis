@@ -25,32 +25,42 @@ def select_all_words():
     except Exception as _ex:
         print("Error select all words", _ex)
 
-def create_table():
+#def create_table():
+ #   try:
+  #      cur = connect_to_db().cursor()
+   #     cur.execute('''CREATE TABLE word_table (
+    #    id SERIAL PRIMARY KEY,
+     #   normal_form varchar(20) NOT NULL,
+      #  name VARCHAR(20) NOT NULL ,
+       # pos VARCHAR(10),
+        #animacy VARCHAR(10),
+        #aspect VARCHAR(10),
+        #ccase VARCHAR(10),
+        #gender VARCHAR(10),
+        #mood VARCHAR(10),
+        #number VARCHAR(10),
+        #person VARCHAR(10),
+        #tense VARCHAR(10),
+        #transitivity VARCHAR(10));''')
+        #cur.execute('''CREATE TABLE normalform_table(
+        #id SERIAL PRIMARY KEY,
+        #name VARCHAR(30));''')
+        #cur.close()
+        #connect_to_db().close()
+        #print("Successfully created")
+    #except Exception as _ex:
+     #   print("Error create tables", _ex)
+def find_word(word):
     try:
         cur = connect_to_db().cursor()
-        cur.execute('''CREATE TABLE word_table (
-        id SERIAL PRIMARY KEY,
-        normal_form varchar(20) NOT NULL,
-        name VARCHAR(20) NOT NULL ,
-        pos VARCHAR(10),
-        animacy VARCHAR(10),
-        aspect VARCHAR(10),
-        ccase VARCHAR(10),
-        gender VARCHAR(10),
-        mood VARCHAR(10),
-        number VARCHAR(10),
-        person VARCHAR(10),
-        tense VARCHAR(10),
-        transitivity VARCHAR(10));''')
-        cur.execute('''CREATE TABLE normalform_table(
-        id SERIAL PRIMARY KEY,
-        name VARCHAR(30));''')
+        cur.execute("SELECT id FROM normalform_table WHERE name = '%s' ;" % (word))
+        row = cur.fetchone()
+        print(row[0])
         cur.close()
         connect_to_db().close()
-        print("Successfully created")
+        return row[0]
     except Exception as _ex:
-        print("Error create tables", _ex)
-
+        print("Error search", _ex)
 
 def insert_word(normal_form, words):
     try:
@@ -88,11 +98,15 @@ def select_word(id):
     except Exception as _ex:
         print("Error select word", _ex)
 
-def delete_table():
+def clear_table():
     try:
         cur = connect_to_db().cursor()
-        cur.execute("DROP TABLE normalform_table;")
-        cur.execute("DROP TABLE word_table;")
+        cur.execute('''DELETE FROM normalform_table;
+                    SELECT setval('normalform_table_id_seq', 1, false);
+                    ''')
+        cur.execute('''DELETE FROM word_table;
+                    SELECT setval('word_table_id_seq', 1, false);
+                    ''')
         cur.close()
         connect_to_db().close()
     except Exception as _ex:

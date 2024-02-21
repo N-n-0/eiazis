@@ -5,13 +5,15 @@
 {% endblock %}
 
 {% block body %}
-<div class="container mt-5">
+<div class="container mt-5" >
     <h1>Все слова в тексте</h1>
     {% for el in words %}
-    <div class = "gridclass container2 rounded-pill">
-    <div class = "pidoras divinl">{{el[1]}}</div>
+    <div class = "gridclass container2 rounded-pill" style="background-color: rgb(107 208 238)">
+    <div class = "myclass divinl">{{el[1]}}</div>
     <div class="divinl">
-    <button class="btn btn-secondary rounded-pill px-3 stylebtn " type="button">Подробнее</button>
+        <form action="../word/{{el[0]}}">
+    <button class="btn btn-secondary rounded-pill px-3 stylebtn " type="submit">Подробнее</button>
+            </form>
     </div>
 </div>
     {% endfor %}
