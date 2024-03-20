@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Что-то пошло не так
+{% endblock %}
+
+{% block body %}
+<h1 style="color: gray; text-shadow: -1px -1px 0 black, 1px -1px 0 black, -1px 1px 0 black, 1px 1px 0 black; margin-left:3%;">Для данного слова невозможно образовать словоформу</h1>
+         <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3" rel="el" action="../word/{{id}}" method="post">
+ <button class="btn btn-secondary rounded-pill px-3 stylebtn " style="margin-left: 3%;" type="submit">Вернуться</button>
+        </form>
+<!--<div class="stylebtn">
+    <form action="../word/{{id}}">
+        <button class="btn btn-secondary rounded-pill px-3 stylebtn " type="submit">Вернуться</button>
+                </form>
+</div>-->
+{% endblock %}

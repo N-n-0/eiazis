@@ -1,5 +1,4 @@
 import os
-
 import nltk
 from nltk.tokenize import word_tokenize
 from nltk.stem import SnowballStemmer
@@ -8,16 +7,19 @@ import pymorphy3
 from flask import Flask, render_template, request, redirect, url_for, send_from_directory
 from db import *
 import re
-
 from werkzeug.utils import secure_filename
 
-# папка для сохранения загруженных файлов
+
 UPLOAD_FOLDER = "C:/Users/nikit/Desktop/bsuir/ЕЯзИИС/lab1/files"
 
 app = Flask(__name__)
-morphem = ['Часть речи', 'Одушевленность', 'Вид',
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
+
+morphem_dict = ['Часть речи', 'Одушевленность', 'Вид',
            'Падеж', 'Род', 'Наклонение', 'Число', 'Лицо', 'Время',
            'Переходность']
+
 abbreviations = {"NOUN": "Имя существительное", "ADJF": "Имя прилагательное (полное)",
                  "ADJS": "Имя прилагательное (краткое)", "COMP": "Компаратив",
                  "VERB": "Глагол", "INFN": "Инфинитив",
@@ -40,49 +42,43 @@ abbreviations = {"NOUN": "Имя существительное", "ADJF": "Им�
                  "pres": "Настоящее", "past": "Прошедшее", "futr": "Будущее",
                  "indc": "Изъявительное", "impr": "Повелительное"}
 
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+part_of_speech_dict = {
+                 "NOUN": ["Число", "Падеж"],
+                 "ADJF": ["Число", "Падеж", "Род"],
+                 "ADJS": ["Число", "Падеж", "Род"],
+                 "INFN": ["Наклонение", "Число","Время", "Лицо", "Род"],
+                 "VERB": ["Наклонение", "Число","Время", "Лицо", "Род"],
+                 "NUMR": ["Падеж", "Число", "Род"],
+                 "PRTF": ["Форма", "Число", "Род", "Падеж"],
+                 "PRTS": ["Форма", "Число", "Род", "Падеж"],
+                 "NPRO": ["Падеж", "Число", "Род"]}
 
+edit_param_dict = {
+                "Число": ["Единственное", "Множественное"],
+                "Падеж": ["Именительный", "Родительный", "Дательный", "Винительный", "Творительный", "Предложный"],
+                "Род": ["Мужской", "Женский", "Средний"],
+                "Наклонение": ["Повелительное", "Изъявительное"],
+                "Форма": ["Полная", "Краткая"],
+                "Время": ["Прошедшее", "Настоящее", "Будущее"],
+                "Лицо": ["1-е", "2-е", "3-е"]
+}
 @app.route('/', methods=['GET', 'POST'])
 def intro():
-    print("3")
     if request.method == 'POST':
-        print("2")
-        """req = request.form
-        print(req.get("file"))
-        adress = find_word(req.get("search"))
-        file = request.files['file']
-        # Далее можно работать с файлом, например, сохранить его на сервере
-        file.save(f'{adress}')
-        print(file)
-        start(file)"""
         if 'file' not in request.files:
-            # После перенаправления на страницу загрузки
-            # покажем сообщение пользователю
             print("No file part")
             return redirect(request.url)
         file = request.files['file']
-        print(file)
-        # Если файл не выбран, то браузер может
-        # отправить пустой файл без имени.
         if file.filename == '':
             print("No selected file")
             return redirect(request.url)
         if file :
-            # безопасно извлекаем оригинальное имя файла
             filename = secure_filename(file.filename)
-            # сохраняем файл
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            # если все прошло успешно, то перенаправляем
-            # на функцию-представление `download_file`
-            # для скачивания файла
             start(filename)
-    print("1")
     words = select_all_words()
-    return render_template("all_words.html", words=words)
 
-@app.route('/uploads/<name>')
-def download_file(name):
-    return send_from_directory(app.config["UPLOAD_FOLDER"], name)
+    return render_template("all_words.html", words=words)
 
 
 @app.route('/word/<int:id>', methods=["GET", "POST"])
@@ -91,9 +87,9 @@ def word(id):
     value = []
     for i in range(len(selected_word)):
         value.append(change_info(selected_word[i]))
-
     words = select_all_words()
-    return render_template("word.html", words=words, value=value, morphem=morphem, size=10, val_size=len(selected_word))
+    return render_template("word.html", words=words, value=value, morphem=morphem_dict, size=10, val_size=len(selected_word), id=id)
+
 
 @app.route('/word', methods=["GET", "POST"])
 def search():
@@ -108,7 +104,70 @@ def search():
     words = select_all_words()
     return render_template("all_words.html", words=words)
 
+@app.route('/edit/<int:id>', methods=["GET", "POST"])
+def generate(id):
+    selected_word = select_word(id)
+    values = generate_edit_value(selected_word[0][2])
+    if len(values) == 0:
+        return render_template("non.html", id=id)
+    header = selected_word[0][1]
+    if request.method == "POST":
+        #my_select_value = request.form['MySelect']
+        print()
+        print()
+        print()
+       # print(my_select_value)
+        print()
+        print()
+        print()
+        morph = pymorphy3.MorphAnalyzer()
+        print(1)
+        print(header)
+        print(2)
+        parsed_word = morph.parse(header)[0]
+        el_array = []
+        for el in values:
+            if "Множественное" in el_array and el=="Род":
+                pass
+            elif el == "Время" and "Повелительное" in el_array:
+                pass
+            elif el == "Лицо" and "Прошедшее" in el_array:
+                pass
+            elif el == "Род" and "Прошедшее" not in el_array and (parsed_word.tag.POS == 'INFN' or parsed_word.tag.POS == 'VERB'):
+                pass
+            else:
+                el_value = request.form.get(f'{el}')
+                el_array.append(el_value)
+        print(el_array)
+        params = []
+        for el in el_array:
+            for key, val in abbreviations.items():
+                if val == el:
+                    params.append(f'{key}')
+        #unique_array = [x for i, x in enumerate(params) if x not in params[:i]]
 
+        print(parsed_word)
+        print(3)
+        print(parsed_word.lexeme)
+        print(0)
+        print(*params)
+        header = parsed_word.inflect({*params}).word
+        print(4)
+        print(header)
+        print(5)
+
+    return render_template("edit.html", word=header, id=id, values=values, params=edit_param_dict, size=len(values))
+
+
+def generate_edit_value(word):
+    morph = pymorphy3.MorphAnalyzer(lang='ru')
+    parsed_word = morph.parse(word)[0].tag
+    values = []
+    if parsed_word.POS in list(part_of_speech_dict.keys()):
+        values = part_of_speech_dict[parsed_word.POS]
+    return values
+    
+        
 @app.route('/example/<int:id>', methods=['GET', 'POST'])
 def example(id):
     if request.method == "POST":
@@ -124,7 +183,7 @@ def example(id):
         return redirect(request.url)
 
     words = select_all_words()
-    return render_template("example.html", words=words, id=id, value=value, morphem=morphem, size=10, val_size=len(selected_word))
+    return render_template("example.html", words=words, id=id, value=value, morphem=morphem_dict, size=10, val_size=len(selected_word))
 
 
 def change_info(word):

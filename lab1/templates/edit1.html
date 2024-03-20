@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block title %}
+{{word}}
+{% endblock %}
+
+{% block body %}
+<h1 style="color: white; margin-left:3%; margin-top: 1%; margin-bottom: 3%">{{word}}</h1>
+         <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3" rel="el" action="../edit/{{id}}" method="post">
+  {% for el in values %}
+<select name="{{el}}" label="{{el}}">
+
+      {% for i in params[el] %}
+        <option value="{{ i }}">{{ i }}</option>
+      {% endfor %}
+
+</select>
+               {% endfor %}
+             <input type="submit" value="Генерировать">
+</form>
+
+{% endblock %}

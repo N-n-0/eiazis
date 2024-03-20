@@ -1,19 +1,20 @@
 {% extends 'base.html' %}
 
 {% block title %}
-Все слова
+Словарь
+
 {% endblock %}
 
 {% block body %}
 <div class="container mt-5" >
-    <h1>Все слова в тексте</h1>
+    <h1 style="text-align: center;">Все слова в тексте</h1>
     {% for el in words %}
-    <div class = "gridclass container2 rounded-pill" style="background-color: rgb(107 208 238)">
-    <div class = "myclass divinl">{{el[1]}}</div>
+    <div class = "gridclass container2 rounded-pill" style="background-color: rgb(255 193 7); color: black; ">
+    <div class = "myclass divinl" style="color: black">{{el[1]}}</div>
     <div class="divinl">
         <form action="../word/{{el[0]}}">
-    <button class="btn btn-secondary rounded-pill px-3 stylebtn " type="submit">Подробнее</button>
-            </form>
+    <button class="btn btn-secondary rounded-pill px-3 stylebtn " style="background-color: black;" type="submit">Подробнее</button>
+        </form>
     </div>
 </div>
     {% endfor %}

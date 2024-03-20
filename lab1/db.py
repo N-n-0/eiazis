@@ -55,7 +55,6 @@ def find_word(word):
         cur = connect_to_db().cursor()
         cur.execute("SELECT id FROM normalform_table WHERE name = '%s' ;" % (word))
         row = cur.fetchone()
-        print(row[0])
         cur.close()
         connect_to_db().close()
         return row[0]
@@ -88,10 +87,8 @@ def select_word(id):
         cur = connect_to_db().cursor()
         cur.execute("SELECT name FROM normalform_table where id=%s ;" % (str(id)))
         rows = cur.fetchall()
-        print(rows)
         cur.execute("SELECT * FROM word_table where normal_form='%s' ;" % (rows[0][0]))
         rows = cur.fetchall()
-        print(rows)
         cur.close()
         connect_to_db().close()
         return rows

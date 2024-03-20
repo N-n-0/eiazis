@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% block title %}
+{{word}}
+{% endblock %}
+
+{% block body %}
+<h1 style="color: white; margin-left:3%; margin-top: 1%; margin-bottom: 3%">{{word}}</h1>
+    <ul class="list-group mb-3" >
+         <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3" rel="el" action="../edit/{{id}}" method="post">
+    {% for el in values %}
+            <h5 class="d-flex justify-content-between align-items-center mb-3" style="margin-left: 3%; color: white; margin-top: 1%;">
+            <span >{{el}}</span>
+            </h5>
+<!--color: gray; text-shadow: -1px -1px 0 black, 1px -1px 0 black, -1px 1px 0 black, 1px 1px 0 black;-->
+        <li class="list-group-item d-flex justify-content-between lh-sm" style="background-color: #495057; border: None;">
+
+                <input type="text" class="form-control form-control-dark" autocomplete="on" autofocus list="{{params[el]}}"  name="{{el}}">
+                     <datalist id="{{params[el]}}">
+                                 {% for i in params[el] %}
+          <option>{{i}}</option>
+      {% endfor %}
+                    </li>
+
+    {% endfor %}
+    </ul>
+ <button class="btn btn-secondary rounded-pill px-3 stylebtn " style="margin-left: 3%" type="submit">Сгенерировать</button>
+        </form>
+<!--<div class="stylebtn">
+    <form action="../word/{{id}}">
+        <button class="btn btn-secondary rounded-pill px-3 stylebtn " type="submit">Вернуться</button>
+                </form>
+</div>-->
+{% endblock %}
