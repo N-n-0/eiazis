@@ -25,31 +25,7 @@ def select_all_words():
     except Exception as _ex:
         print("Error select all words", _ex)
 
-#def create_table():
- #   try:
-  #      cur = connect_to_db().cursor()
-   #     cur.execute('''CREATE TABLE word_table (
-    #    id SERIAL PRIMARY KEY,
-     #   normal_form varchar(20) NOT NULL,
-      #  name VARCHAR(20) NOT NULL ,
-       # pos VARCHAR(10),
-        #animacy VARCHAR(10),
-        #aspect VARCHAR(10),
-        #ccase VARCHAR(10),
-        #gender VARCHAR(10),
-        #mood VARCHAR(10),
-        #number VARCHAR(10),
-        #person VARCHAR(10),
-        #tense VARCHAR(10),
-        #transitivity VARCHAR(10));''')
-        #cur.execute('''CREATE TABLE normalform_table(
-        #id SERIAL PRIMARY KEY,
-        #name VARCHAR(30));''')
-        #cur.close()
-        #connect_to_db().close()
-        #print("Successfully created")
-    #except Exception as _ex:
-     #   print("Error create tables", _ex)
+
 def find_word(word):
     try:
         cur = connect_to_db().cursor()
@@ -70,8 +46,8 @@ def insert_word(normal_form, words):
             cur.execute(insert_query % (element))
         insert_query = '''
             INSERT INTO word_table (normal_form, name, pos, animacy, aspect, ccase, 
-            gender, mood, number, person, tense, transitivity)
-            VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s');
+            gender, mood, number, person, tense, transitivity, stem, ending)
+            VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s');
         '''
         for word in words:
             cur.execute(insert_query % tuple(word))

@@ -1,4 +1,5 @@
 import os
+from nltk.stem import SnowballStemmer
 import nltk
 from nltk.tokenize import word_tokenize
 from nltk.stem import SnowballStemmer
@@ -18,7 +19,7 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 morphem_dict = ['Часть речи', 'Одушевленность', 'Вид',
            'Падеж', 'Род', 'Наклонение', 'Число', 'Лицо', 'Время',
-           'Переходность']
+           'Переходность', 'Основа слова', 'Окончание']
 
 abbreviations = {"NOUN": "Имя существительное", "ADJF": "Имя прилагательное (полное)",
                  "ADJS": "Имя прилагательное (краткое)", "COMP": "Компаратив",
@@ -88,7 +89,7 @@ def word(id):
     for i in range(len(selected_word)):
         value.append(change_info(selected_word[i]))
     words = select_all_words()
-    return render_template("word.html", words=words, value=value, morphem=morphem_dict, size=10, val_size=len(selected_word), id=id)
+    return render_template("word.html", words=words, value=value, morphem=morphem_dict, size=12, val_size=len(selected_word), id=id)
 
 
 @app.route('/word', methods=["GET", "POST"])
@@ -112,18 +113,7 @@ def generate(id):
         return render_template("non.html", id=id)
     header = selected_word[0][1]
     if request.method == "POST":
-        #my_select_value = request.form['MySelect']
-        print()
-        print()
-        print()
-       # print(my_select_value)
-        print()
-        print()
-        print()
         morph = pymorphy3.MorphAnalyzer()
-        print(1)
-        print(header)
-        print(2)
         parsed_word = morph.parse(header)[0]
         el_array = []
         for el in values:
@@ -138,23 +128,13 @@ def generate(id):
             else:
                 el_value = request.form.get(f'{el}')
                 el_array.append(el_value)
-        print(el_array)
         params = []
         for el in el_array:
             for key, val in abbreviations.items():
                 if val == el:
                     params.append(f'{key}')
-        #unique_array = [x for i, x in enumerate(params) if x not in params[:i]]
 
-        print(parsed_word)
-        print(3)
-        print(parsed_word.lexeme)
-        print(0)
-        print(*params)
         header = parsed_word.inflect({*params}).word
-        print(4)
-        print(header)
-        print(5)
 
     return render_template("edit.html", word=header, id=id, values=values, params=edit_param_dict, size=len(values))
 
@@ -166,24 +146,6 @@ def generate_edit_value(word):
     if parsed_word.POS in list(part_of_speech_dict.keys()):
         values = part_of_speech_dict[parsed_word.POS]
     return values
-    
-        
-@app.route('/example/<int:id>', methods=['GET', 'POST'])
-def example(id):
-    if request.method == "POST":
-        req = request.form
-        print(req.get("file"))
-    selected_word = select_word(id)
-    value = []
-    for i in range(len(selected_word)):
-        value.append(change_info(selected_word[i]))
-    if request.method == "POST":
-        req = request.form
-        print(req.get("file"))
-        return redirect(request.url)
-
-    words = select_all_words()
-    return render_template("example.html", words=words, id=id, value=value, morphem=morphem_dict, size=10, val_size=len(selected_word))
 
 
 def change_info(word):
@@ -198,12 +160,36 @@ def change_info(word):
 
 def make_insert_value(word):
     morph = pymorphy3.MorphAnalyzer(lang='ru')
-    parsed_word = morph.parse(word)[0].tag  # Морфологический анализ слова
+    parsed_word = morph.parse(word)[0].tag
 
     values = [morph.parse(word)[0].normal_form, word, parsed_word.POS,
               parsed_word.animacy, parsed_word.aspect, parsed_word.case,
               parsed_word.gender, parsed_word.mood, parsed_word.number,
               parsed_word.person, parsed_word.tense, parsed_word.transitivity]
+
+    stemmer = SnowballStemmer(language='russian')
+
+    if parsed_word.POS == "ADJS" and parsed_word.gender == "masc":
+        stem = word
+        ending = ''
+    elif parsed_word.POS == "VERB" and parsed_word.mood == "indc" and parsed_word.tense == "past":
+        if parsed_word.gender == "masc":
+            stem = word[:-1]
+            ending = ''
+        else:
+            stem = word[:-2]
+            ending = word[len(stem) + 1:]
+    elif parsed_word.POS == "VERB" and parsed_word.mood == "indc" and parsed_word.tense == "pres" and parsed_word.person == "2per" and parsed_word.number == "plur":
+        stem = word[:-3]
+        ending = word[len(stem):]
+    elif parsed_word.POS == "VERB" and parsed_word.mood == "indc" and parsed_word.tense == "futr" and parsed_word.person == "3per" and parsed_word.number == "plur":
+        stem = word[:-2]
+        ending = word[len(stem):]
+    else:
+        stem = stemmer.stem(word)
+        ending = word[len(stem):]
+    values.append(stem)
+    values.append(ending)
     return values
 
 
