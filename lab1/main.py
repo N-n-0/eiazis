@@ -9,12 +9,17 @@ from flask import Flask, render_template, request, redirect, url_for, send_from_
 from db import *
 import re
 from werkzeug.utils import secure_filename
+import json
+import codecs
+
 
 
 UPLOAD_FOLDER = "C:/Users/nikit/Desktop/bsuir/ЕЯзИИС/lab1/files"
+SAVE_FOLDER = "C:/Users/nikit/Desktop/bsuir/ЕЯзИИС/lab1/saves"
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+app.config['SAVE_FOLDER'] = SAVE_FOLDER
 
 
 morphem_dict = ['Часть речи', 'Одушевленность', 'Вид',
@@ -105,6 +110,22 @@ def search():
     words = select_all_words()
     return render_template("all_words.html", words=words)
 
+
+@app.route('/save', methods=['GET', 'POST'])
+def output_save():
+    if request.method == "POST":
+        req = request.form
+        filename = req.get("save_name")
+        if filename is not None:
+            output(filename)
+            print(4)
+            file_path = os.path.join(filename + '.json')
+            return send_from_directory(app.config['SAVE_FOLDER'], file_path, as_attachment=True)
+
+        else:
+            return redirect(request.url)
+    return render_template("save.html")
+
 @app.route('/edit/<int:id>', methods=["GET", "POST"])
 def generate(id):
     selected_word = select_word(id)
@@ -171,23 +192,23 @@ def make_insert_value(word):
 
     if parsed_word.POS == "ADJS" and parsed_word.gender == "masc":
         stem = word
-        ending = ''
+        ending = ' '
     elif parsed_word.POS == "VERB" and parsed_word.mood == "indc" and parsed_word.tense == "past":
         if parsed_word.gender == "masc":
             stem = word[:-1]
-            ending = ''
+            ending = ' '
         else:
             stem = word[:-2]
-            ending = word[len(stem) + 1:]
+            ending = word[len(stem) + 1:] + ' '
     elif parsed_word.POS == "VERB" and parsed_word.mood == "indc" and parsed_word.tense == "pres" and parsed_word.person == "2per" and parsed_word.number == "plur":
         stem = word[:-3]
-        ending = word[len(stem):]
+        ending = word[len(stem):] + ' '
     elif parsed_word.POS == "VERB" and parsed_word.mood == "indc" and parsed_word.tense == "futr" and parsed_word.person == "3per" and parsed_word.number == "plur":
         stem = word[:-2]
-        ending = word[len(stem):]
+        ending = word[len(stem):] + ' '
     else:
         stem = stemmer.stem(word)
-        ending = word[len(stem):]
+        ending = word[len(stem):] + ' '
     values.append(stem)
     values.append(ending)
     return values
@@ -205,6 +226,22 @@ def make_insert(tokens):
     return normal_form, words
 
 
+
+
+
+def output(filename):
+    data = select_output_info()
+
+# Преобразование данных в формат JSON
+    json_data = json.dumps(data, ensure_ascii=False)
+    print(2)
+    print(f"{json_data}")
+
+    # Сохранение данных в файл JSON с кодировкой UTF-8
+    with open(f'{SAVE_FOLDER}/{filename}.json', 'w', encoding='utf-8') as file:
+        print(3)
+        file.write(json_data)
+
 def start(filename):
 
     with open(f"{UPLOAD_FOLDER}/{filename}", "r", encoding='utf-8') as f:
@@ -218,4 +255,6 @@ def start(filename):
 
 
 if __name__ == '__main__':
+    #clear_table()
     app.run(debug=True)
+

@@ -13,6 +13,28 @@ def connect_to_db():
     except Exception as _ex:
         print("Error connection", _ex)
 
+def select_output_info():
+    try:
+        cur = connect_to_db().cursor()
+        cur.execute("SELECT * FROM word_table;")
+        rows = cur.fetchall()
+        data = []
+
+        # Преобразование результатов в формат JSON
+        for row in rows:
+            # Создание словаря для каждой строки
+            row_data = {}
+            for i, column_name in enumerate(cur.description):
+                # Используйте column_name[0] для доступа к имени столбца
+                # Используйте row[i] для доступа к значению столбца
+                row_data[column_name[0]] = row[i]
+            # Добавление словаря в список данных
+            data.append(row_data)
+        cur.close()
+        connect_to_db().close()
+        return data
+    except Exception as _ex:
+        print("Error select all words", _ex)
 
 def select_all_words():
     try:

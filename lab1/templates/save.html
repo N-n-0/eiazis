@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Сохранение словаря
+{% endblock %}
+
+{% block body %}
+
+<h1 style="color: white; margin-left:3%; margin-top: 1%;">Введите название словаря</h1>
+<div style="display: flex; margin-top:1%;">
+         <div style="margin-bottom: 2%; width: 100%; margin-left: 3%;">
+             <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3" action="../save" method="post">
+              <input type="text" class="form-control form-control-dark"  autocomplete="on" autofocus name="save_name">
+ <button class="btn btn-secondary rounded-pill px-3 stylebtn " style="margin-top: 2%; margin-left:0%; width:10%;" type="submit">Сохранить</button>
+             </form>
+    </div>
+    </div>
+{% endblock %}
