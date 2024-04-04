@@ -72,6 +72,7 @@ def insert_word(normal_form, words):
             VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s');
         '''
         for word in words:
+
             cur.execute(insert_query % tuple(word))
         print("Successfully inserted")
         cur.close()

@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+
+{% block title %}
+{{text[1]}}
+{% endblock %}
+
+{% block body %}
+<h2 style="    margin-top: 3%; margin-left:2%;">
+            <span style="color: black">Название:</span>
+            <span class="name">{{text[1]}}</span>
+</h2>
+        <h2 style="    margin-top: 1%; margin-left:2%;">
+            <span style="color: black">Автор:</span>
+            <span class="author">{{text[2]}}</span>
+        </h2>
+    <h2 style="    margin-top: 1%; margin-left:2%;">
+        <span style="color: black">Категория:</span>
+        <span class="category">{{text[3]}}</span>
+        </h2>
+<div style="display:flex;">
+<div style="  width: 25%; margin: 0 10px;">
+<button class="btn btn-secondary rounded-pill px-3 stylebtn " style="margin-left: 5%; width: 95%; background-color: #747C9B;" onclick="showDiv('div1', 'div2')">Показать текст</button>
+    </div>
+<div style="  width: 25%; margin: 0 10px;">
+<button class="btn btn-secondary rounded-pill px-3 stylebtn " style="margin-left: 5%; width: 95%; background-color: #747C9B;" onclick="showDiv('div2', 'div1')">Показать разметку</button>
+</div>
+<div style="  width: 25%; margin: 0 10px;">
+                <form action="../save/{{text[0]}}" method="post">
+    <button class="btn btn-secondary rounded-pill px-3 stylebtn " style="margin-left: 5%; width: 95%; background-color: #747C9B;" type="submit">Сохранить разметку</button>
+            </form>
+</div>
+<div style="  width: 25%; margin: 0 10px;">
+                <form action="../words/{{text[0]}}" method="post">
+    <button class="btn btn-secondary rounded-pill px-3 stylebtn " style="margin-left: 5%; width: 95%; background-color: #747C9B;" type="submit">Просмотр слов</button>
+            </form>
+</div>
+    </div>
+<div class="xml content" id="div1" style="    white-space: pre-wrap;
+    background-color: #a3adf7;
+    color: black;
+    border-radius: 30px;">
+    {{text[5]}}
+</div>
+<div class="xml" id="div2" style="display: none">
+    <input type="text" class="form-control form-control-dark" style="    border: 1px solid black;" id="searchInput" placeholder="Введите текст для поиска">
+    <pre class="content" id="content" style="    background-color: #a3adf7;
+    color: black;
+    border-radius: 30px;" data-my-variable="{{text[4]}}">
+{{text[4]}}
+</pre>
+    </div>
+    <script>
+document.getElementById('searchInput').addEventListener('input', highlightMatches);
+
+function highlightMatches() {
+    var searchInput = document.getElementById('searchInput').value.toLowerCase();
+    var content = document.getElementById('content');
+
+    // Если поиск пустой, отобразить значение переменной
+    if (searchInput === '') {
+        var myVariable = document.getElementById('content').dataset.myVariable;
+        content.textContent = myVariable; // Обновление содержимого элемента <pre>
+        return;
+    }
+
+    // Замена символов < и > на &lt; и &gt;
+    searchInput = searchInput.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+    // Удаление предыдущих выделений
+    var highlightedText = content.innerHTML.replace(/<\/?span[^>]*>/g, '');
+    console.log(searchInput);
+    // Поиск и выделение совпадений
+    var regex = new RegExp('(' + searchInput + ')', 'gi');
+    console.log(regex);
+    var highlightedContent = highlightedText.replace(regex, '<span class="highlight">$1</span>');
+
+    content.innerHTML = highlightedContent;
+}
+    function showDiv(divId1, divId2) {
+      var div1 = document.getElementById(divId1);
+      div1.style.display = "block";
+      var div2 = document.getElementById(divId2);
+      div2.style.display = "none";
+    }
+  </script>
+{% endblock %}
