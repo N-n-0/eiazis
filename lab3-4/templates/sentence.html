@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Разбор предложения
+{% endblock %}
+
+{% block body %}
+    <img src="{{ image_url }}" style="width:100%">
+    <form action="../../../text/{{id}}" >
+    <button class="btn btn-secondary rounded-pill px-3 stylebtn " style="background-color: #747C9B; width:90%; margin-left: 5%; margin-right:5%;" type="submit">Вернуться</button>
+        </form>
+{% endblock %}

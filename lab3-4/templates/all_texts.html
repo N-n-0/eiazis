@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Корпус текстов
+
+{% endblock %}
+
+{% block body %}
+<div class="container mt-5" style="margin-bottom: 2%;">
+    <h1 style="text-align: center;">Содержимое</h1>
+    {% for el in texts %}
+    <div class = "gridclass container2 rounded-pill" style="background-color: #c9d3e4; color: black; height: 3%; display: flex;">
+        <div class = "myclass" style="flex-basis: 80%;">
+    <div style="color: black">Название: {{el[1]}}</div>
+    <div  style="color: black">Автор: {{el[2]}}</div>
+    <div  style="color: black">Категория: {{el[3]}}</div>
+        </div>
+    <div style="flex-basis: 20%; margin-top: 2%;">
+        <form action="../text/{{el[0]}}">
+    <button class="btn btn-secondary rounded-pill px-3 stylebtn " style="background-color: #747C9B;" type="submit">Подробнее</button>
+        </form>
+                        <form action="../save/{{el[0]}}" method="get">
+    <button class="btn btn-secondary rounded-pill px-3 stylebtn " style="background-color: #747C9B;" type="submit">Сохранить</button>
+            </form>
+    </div>
+</div>
+    {% endfor %}
+</div>
+{% endblock %}
