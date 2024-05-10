@@ -80,7 +80,6 @@ def upload():
                 start(filename)
         texts = select_all_texts()
         return render_template("all_texts.html", texts=texts)
-    return redirect('/')
 
 
 @app.route('/clear', methods=["GET", "POST"])

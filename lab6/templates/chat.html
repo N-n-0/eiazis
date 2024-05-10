@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Chat
+
+{% endblock %}
+
+{% block body %}
+<div class="chats">
+  <!-- Поле чата -->
+  <div style="
+    margin-top: 2%;">
+    <form action="../delete/{{id}}">
+      <button type="submit" style="border-color: white;">X</button>
+    </form>
+  </div>
+  <div class="chat-box" id="chat-box">
+
+    {% for el in info %}
+    <div class="chat-message-question">{{el[0]}}</div>
+    <div class="chat-message-answer">{{el[1]}}</div>
+    {% endfor %}
+    <div id="display"></div>
+  </div>
+
+  <!-- Поле ввода -->
+  <div class="input-box">
+    <form action="../ask/{{id}}" method="post">
+    <input type="text" id="message-input" name="message-input" placeholder="Введите вопрос" style="border-radius: 20px;
+    width: 90%;
+    height: 90%;
+padding: 10px;">
+    <button onclick="sendMessage()" type="submit" style="width: 8%;
+    margin-left: 1%;
+    height: 100%;
+    border-radius: 20px;
+    background-color: #1516a1;
+color: white">-></button>
+      </form>
+  </div>
+</div>
+  <script>
+
+    function sendMessage() {
+  var messageInput = document.getElementById('message-input');
+  var message = messageInput.value;
+
+  // Создаем новый элемент для сообщения
+  var messageElement = document.createElement('div');
+  messageElement.textContent = message;
+
+  // Добавляем класс к элементу
+  messageElement.classList.add('chat-message-question');
+
+  // Получаем поле чата
+  var chatBox = document.getElementById('chat-box');
+
+  // Добавляем новое сообщение в поле чата
+  chatBox.appendChild(messageElement);
+}
+  </script>
+{% endblock %}

@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Chat
+
+{% endblock %}
+
+{% block body %}
+<div class="container mt-5" style="margin-bottom: 2%;">
+
+    <h1 style="text-align: center;">Чаты</h1>
+
+    {% for el in info %}
+    <div class = "gridclass container2 rounded-pill" style="background-color: #c9d3e4; color: black; ">
+    <div class = "myclass divinl" style="color: black">{{el[1]}}</div>
+    <div class="divinl">
+        <form action="../chat/{{el[0]}}">
+    <button class="btn btn-secondary rounded-pill px-3 stylebtn " style="background-color: #747C9B; width:30%; margin-left: 60%" type="submit">Перейти</button>
+        </form>
+    </div>
+</div>
+    {% endfor %}
+</div>
+{% endblock %}

@@ -1,0 +1,87 @@
+/* Стили для поля чата */
+.gridclass{
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-auto-rows: 10%
+}
+
+.container2{
+    width: 100%;
+    height: 60px;
+    /*margin-left: 10%;*/
+    margin-top: 3%;
+    background-color: rgb(82, 0, 56);
+    border: 2px solid;
+    border-color: black;
+
+    /* text-indent: 2%; */
+    /* text-align: justify; */
+}
+
+.stylebtn{
+    position: relative;
+    margin-top: 2%;
+    width: 70%;
+    text-align: center;
+    background-color: #747C9B;
+    border: 1px solid #747C9B;
+}
+
+.myclass{
+    position: relative;
+    color: aliceblue;
+    /*height: 70px;*/
+    margin-top: 2.5%;
+    margin-bottom: 2.5%;
+    margin-left: 5%;
+    vertical-align: middle;
+    font-weight: bold;
+    font-size: large;
+
+}
+
+.divinl{
+    display: inline;
+}
+
+.chats{
+    background-color: #a3adf7;
+    height: 618px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+    .chat-box {
+      border: 1px solid #ccc;
+                width: 90%;
+    background-color: white;
+    height: 100%;
+    overflow-y: auto;
+    border-radius: 15px;
+    }
+
+    /* Стили для сообщений в чате */
+    .chat-message-answer {
+          margin-left: 2%;
+          width: 70%;
+    margin-top: 5%;
+    margin-bottom: 1%;
+    }
+
+    .chat-message-question {
+          margin-right: 2%;
+    margin-top: 1%;
+    margin-bottom: 1%;
+    float: right;
+    }
+    /* Стили для поля ввода */
+    .input-box {
+      margin-top: 1%;
+      width: 90%;
+    height: 8%;
+    margin-bottom: 2%;
+    }
+
+body {
+    background-color: #a3adf7;
+}
